@@ -14,17 +14,18 @@ set(CMAKE_CXX_EXTENSIONS OFF) #set to OFF for portability
 # adding dependencies
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
-# defining the target
+
+# create a library
+add_library(collision_lib INTERFACE)
+target_include_directories(collision_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(collision_lib INTERFACE Eigen3::Eigen)
+
+# create an application for benchmarking
 add_executable(collision_bench src/main.cpp)
-
-
-# adding header locations
 target_include_directories(collision_bench PUBLIC
        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
        ${EIGEN3_INCLUDE_DIRS}
 )
-
-
 target_link_libraries(collision_bench PUBLIC Eigen3::Eigen)
 
 
@@ -43,3 +44,6 @@ target_compile_options(collision_bench PRIVATE -march=native)
 set_target_properties(collision_bench PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE # Enables LTO (Link Time Optimization)
 )
+
+enable_testing()
+add_subdirectory(tests)
