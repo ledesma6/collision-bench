@@ -1,30 +1,30 @@
 #include <iostream>
-#include <Eigen/Core>
+#include <random>
+#include "AABB.hpp"
 
 int main() {
-    std::cout << "--- Collision Bench: System Check ---" << std::endl;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dist(-100.0, 100.0);
 
-    // Check Eigen Version
-    std::cout << "Eigen Version: "
-              << EIGEN_WORLD_VERSION << "."
-              << EIGEN_MAJOR_VERSION << "."
-              << EIGEN_MINOR_VERSION << std::endl;
 
-    // Check for SIMD (Instruction Sets)
-    std::cout << "SIMD Instructions Enabled: " << Eigen::SimdInstructionSetsInUse() << std::endl;
 
-    // Simple Math Test
-    Eigen::Vector3d v1(1.0, 2.0, 3.0);
-    Eigen::Vector3d v2(3.0, 2.0, 1.0);
-    double dotProduct = v1.dot(v2);
+    const size_t numPoints = 1000;
+    std::vector<collision::Vector3> points;
+    points.reserve(numPoints);
 
-    std::cout << "Math Test (Dot Product): " << dotProduct << std::endl;
-
-    if (dotProduct == 10.0) {
-        std::cout << "Status: Success. Eigen is configured correctly." << std::endl;
-    } else {
-        std::cout << "Status: Failure. Math results inconsistent." << std::endl;
+    for (size_t i = 0; i < numPoints; ++i) {
+        points.emplace_back(dist(gen), dist(gen), dist(gen));
     }
+
+    collision::AABB axis_aligned_bounding_box = collision::AABB();
+
+    for (const auto& point : points) {
+        axis_aligned_bounding_box.extend(point);
+    }
+
+    std::cout << "Box Min:" << axis_aligned_bounding_box.min().transpose() << std::endl;
+    std::cout << "Box Max: " << axis_aligned_bounding_box.max().transpose() << std::endl;
 
     return 0;
 }
