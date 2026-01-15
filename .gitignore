@@ -1,0 +1,28 @@
+# --- Prerequisites ---
+*.d
+
+# --- Compiled files ---
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+*.out
+
+# --- Build Directories ---
+build/
+bin/
+out/
+cmake-build-*/
+
+# --- IDE Specific ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- System Files ---
+.DS_Store
+Thumbs.db
