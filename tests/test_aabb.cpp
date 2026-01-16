@@ -1,3 +1,4 @@
+#include <random>
 #include <gtest/gtest.h>
 #include "AABB.hpp"
 
@@ -23,4 +24,34 @@ TEST(AABBTest, ExtendsToFitPoints) {
     EXPECT_TRUE(box.contains({0, 0, 0}));
     EXPECT_TRUE(box.contains({-5.0, 0, 0}));
     EXPECT_FALSE(box.contains({6.0, 0, 0}));
+}
+
+// Test consistency between naive and component-wise implementations of contains and extend
+TEST(AABBConsistency, NaiveMatchesOptimized) {
+    collision::AABB box_naive, box_optimized;
+
+    // Use a fixed seed for reproducibility in tests
+    std::mt19937 gen(42);
+    std::uniform_real_distribution<double> dist(-100.0, 100.0);
+
+    // 1. Stress test the 'extend' logic
+    for (int i = 0; i < 1000; ++i) {
+        collision::Vector3 p(dist(gen), dist(gen), dist(gen));
+        box_naive.extend_naive(p);
+        box_optimized.extend(p);
+
+        // Eigen provides a way to check equality within a tolerance
+        ASSERT_TRUE(box_naive.min().isApprox(box_optimized.min()))
+            << "Min mismatch at iteration " << i;
+        ASSERT_TRUE(box_naive.max().isApprox(box_optimized.max()))
+            << "Max mismatch at iteration " << i;
+    }
+
+    // 2. Stress test the 'contains' logic
+    for (int i = 0; i < 1000; ++i) {
+        collision::Vector3 p(dist(gen), dist(gen), dist(gen));
+        // expect identical boolean results
+        EXPECT_EQ(box_naive.contains_naive(p), box_optimized.contains(p))
+            << "Contains mismatch at iteration " << i;
+    }
 }
