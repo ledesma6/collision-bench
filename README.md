@@ -10,7 +10,7 @@ and optimized versions that make use of SIMD (Single Instruction, Multiple Data)
 
 ### Tools and Dependencies:
 
-* **Linear Algebra:** [Eigen 3.4.0](libeigen.gitlab.io) (Used for SIMD-accelerated vector operations).
+* **Linear Algebra:** [Eigen 3.4.0](https://libeigen.gitlab.io) (Used for SIMD-accelerated vector operations).
 * **Testing:** [GoogleTest](https://github.com/google/googletest) (Unit verification).
 * **Microbenchmarking:** [Google Benchmark 1.8.3](https://github.com/google/benchmark) (Performance quantification).
 * **Build System:** CMake 3.28.3 & Make.
