@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF) #set to OFF for portability
 
 # adding dependencies
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-
+message(STATUS "Found Eigen3: ${Eigen3_VERSION}")
 
 # create a library
 add_library(collision_lib INTERFACE)
