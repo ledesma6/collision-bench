@@ -10,3 +10,8 @@ target_link_libraries(aabb_bench PRIVATE
         benchmark::benchmark_main
         collision_lib
 )
+
+# optimization for performance
+set_target_properties(aabb_bench PROPERTIES
+        INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE # Enables LTO (Link Time Optimization)
+)
