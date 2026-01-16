@@ -42,6 +42,17 @@ namespace collision {
         };
 
         /**
+         * @brief Checks if a point is inside the box using standard branching and an early exit strategy.
+         * @param point The 3d coordinate to test
+         */
+        bool contains_naive(const Vector3& point) const {
+            if (point.x() < min_.x() || point.x() > max_.x()) return false;
+            if (point.y() < min_.y() || point.y() > max_.y()) return false;
+            if (point.z() < min_.z() || point.z() > max_.z()) return false;
+            return true;
+        }
+
+        /**
          * @brief Expands the box to include the given point.
          * @param point The 3d coordinate to incorporate into the bounds
          */
@@ -49,6 +60,20 @@ namespace collision {
             // more component-wise operations to update values
             min_ = min_.cwiseMin(point);
             max_ = max_.cwiseMax(point);
+        };
+
+        /**
+         * @brief Expands the box to include the given point using standard branching.
+         * @param point The 3d coordinate to incorporate into the bounds
+         */
+        void extend_naive(const Vector3& point) {
+            if (point.x() < min_.x()) min_.x() = point.x();
+            if (point.y() < min_.y()) min_.y() = point.y();
+            if (point.z() < min_.z()) min_.z() = point.z();
+
+            if (point.x() > max_.x()) max_.x() = point.x();
+            if (point.y() > max_.y()) max_.y() = point.y();
+            if (point.z() > max_.z()) max_.z() = point.z();
         };
 
     private:
