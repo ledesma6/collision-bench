@@ -47,3 +47,5 @@ set_target_properties(collision_bench PROPERTIES
 
 enable_testing()
 add_subdirectory(tests)
+
+add_subdirectory(bench)
