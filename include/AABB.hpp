@@ -3,6 +3,7 @@
 
 #include <limits>
 #include "Point.hpp"
+#include "Ray.hpp"
 
 namespace collision {
     /**
@@ -74,6 +75,23 @@ namespace collision {
             if (point.x() > max_.x()) max_.x() = point.x();
             if (point.y() > max_.y()) max_.y() = point.y();
             if (point.z() > max_.z()) max_.z() = point.z();
+        };
+
+        /**
+         * @brief Verifies if a ray intersects the box using the Slab Method.
+         * @param ray The ray to test against the box.
+         */
+        bool intersects(const Ray& ray) const {
+            //calculate the intersection distances
+            Vector3 t_a = (min_ - ray.origin()).cwiseProduct(ray.invDirection());
+            Vector3 t_b = (max_ - ray.origin()).cwiseProduct(ray.invDirection());
+            //find the entry and exit distances
+            Vector3 t_near = t_a.cwiseMin(t_b);
+            Vector3 t_far = t_a.cwiseMax(t_b);
+            //find the entry and exit intervals
+            double t_start = t_near.maxCoeff();
+            double t_end = t_far.minCoeff();
+            return t_start <= t_end && t_end > 0;
         };
 
     private:
