@@ -1,6 +1,7 @@
 #include <random>
 #include <gtest/gtest.h>
 #include "AABB.hpp"
+#include "Ray.hpp"
 
 // Test that an uninitialized box is "inverted" (empty)
 TEST(AABBTest, InitializationIsConsistent) {
@@ -54,4 +55,21 @@ TEST(AABBConsistency, NaiveMatchesOptimized) {
         EXPECT_EQ(box_naive.contains_naive(p), box_optimized.contains(p))
             << "Contains mismatch at iteration " << i;
     }
+}
+
+TEST(AABBIntersectionTest, BasicScenarios) {
+    collision::AABB box(collision::Vector3(-1, -1, -1), collision::Vector3(1, 1, 1));
+
+    //hits the front face
+    collision::Ray ray_hit(collision::Vector3(0, 0, -5), collision::Vector3(0, 0, 1));
+    EXPECT_TRUE(box.intersects(ray_hit));
+
+    //pointing away from the box
+    collision::Ray ray_miss(collision::Vector3(0, 0, -5), collision::Vector3(0, 1, 0));
+    EXPECT_FALSE(box.intersects(ray_miss));
+
+    //origin inside the box
+    collision::Ray ray_inside(collision::Vector3(0, 0, 0), collision::Vector3(0, 0, 1));
+    EXPECT_TRUE(box.intersects(ray_inside));
+
 }
